@@ -4,7 +4,7 @@ This repository contains my hands-on learning journey with **Ansible**, covering
 It includes **inventory files, playbooks, modules, examples, and EC2 setup steps** to help build solid DevOps automation skills.
 
             ---                
-                                                                                                                                                                        
+  
 ## 🛠️ Prerequisites
 
 Before starting, make sure you have the following:

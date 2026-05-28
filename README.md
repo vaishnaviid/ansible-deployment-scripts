@@ -45,6 +45,8 @@ Connect to EC2 from your local system:
 ```bash
 ssh -i "your-key.pem" ec2-user@<public-ip>
 ```
+---
+
 ### ✔ 5. Install Ansible on EC2
 ``` bash
 sudo yum install ansible2 -y
@@ -53,4 +55,18 @@ Verify installation
 ``` bash
 ansible --version
 ```
+---
 
+### ✔ 6. Change hostname (optional)
+Useful when working with multiple servers.
+``` bash
+sudo hostnamectl hostname ansible-server 
+exit 
+```
+---
+
+### ✔ 7. switch to root user 
+Ansible need root permissions to perform tasks
+``` bash
+sudo -i
+```

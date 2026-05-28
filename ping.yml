@@ -1,7 +1,8 @@
+# This playbook is used to check connectivity to the hosts using the ping module.
 ---
-- name: ping local machine
+- name: check connectivity
   hosts: localhost
-  tasks:
-    - name: check connectivity
-      ansible.builtin.ping: {}
-      
+  tasks: 
+   - name: check connectivity using ping command
+     ansible.builtin.ping:
+    

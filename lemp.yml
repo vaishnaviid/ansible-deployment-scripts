@@ -1,3 +1,4 @@
+# playbook to install lemp stack: nginx, mariadb and php on local machine
 ---
 - name: Installation of lemp stack
   hosts: localhost

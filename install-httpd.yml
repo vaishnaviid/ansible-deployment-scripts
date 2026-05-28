@@ -1,9 +1,11 @@
+# install httpd package, start and enable httpd service 
 ---
 - name: install, start and enable apche httpd on local machine
   hosts: localhost
+  become: yes # to run the tasks with root privileges
   tasks:
     - name: install httpd package
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: httpd
         state: present
     - name: start httpd service
@@ -14,3 +16,19 @@
       ansible.builtin.systemd_service:  
         name: httpd
         enabled: true
+    - name: check httpd service status
+      ansible.builtin.systemd_service:
+        name: httpd
+        state: started
+    - name: create index.html file 
+      ansible.builtin.copy:
+        dest: var/www/html/index.html
+        content: |
+         <html>
+          <head>
+           <title> Welcome to Ansible Practice </title>
+          </head>
+          <body>
+           <h1>Apache HTTPD is successfully installed and running!</h1>
+          </body>
+         </html>

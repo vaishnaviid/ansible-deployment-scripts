@@ -1,8 +1,9 @@
+# install tree package on local machine using dnf module
 ---
 - name: install tree package on local machine
   hosts: localhost
   tasks:
     - name: install tree package
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: tree
         state: present

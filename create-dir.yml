@@ -1,9 +1,14 @@
+# craete a directory and copy a file to that directory
 ---
 - name: create a directory
   hosts: localhost
   tasks:
     - name: create a new directory named 'first_ansible_dir'
       ansible.builtin.file: 
-        path: root/first_ansible_dir
+        path: root/aws_files
         state: directory
-        mode: '0755'
+        mode: '0700'
+    - name: copy the file 'first_ansible_file.txt' to the newly created directory
+      ansible.builtin.copy:
+        src: /home/ec2-user/first_ansible_file.txt
+        dest: root/aws_files/first_ansible_file.txt

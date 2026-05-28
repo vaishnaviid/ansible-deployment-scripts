@@ -9,7 +9,6 @@ It includes **inventory files, playbooks, modules, examples, and EC2 setup steps
 
 Before starting, make sure you have the following:
 
----
 
 ### ✔ 1. Visual Studio Code Installed  
 Download: https://code.visualstudio.com/

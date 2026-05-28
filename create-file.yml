@@ -1,8 +1,8 @@
----
-- name: create a file on local machine 
+--- 
+- name: create a file 
   hosts: localhost
   tasks:
-    - name: create a new file named 'first_ansible_file.txt' inside ""ec2_user"
+    - name: create a file using the file module
       ansible.builtin.file:
         path: /home/ec2-user/first_ansible_file.txt
         state: touch

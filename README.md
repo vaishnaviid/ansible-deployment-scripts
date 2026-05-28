@@ -70,3 +70,10 @@ Ansible need root permissions to perform tasks
 ``` bash
 sudo -i
 ```
+---
+### ✔ 8. change to ansible default directory
+Move to the default Ansible configuration directory
+``` bash
+cd /etc/ansible
+ls
+```

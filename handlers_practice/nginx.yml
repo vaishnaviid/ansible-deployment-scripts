@@ -1,0 +1,59 @@
+---
+- name: Deployment of Web server
+  hosts: targetserver
+  become: yes
+
+  vars:
+    web_pkg: nginx
+    web_service: nginx
+    web_file_path: /usr/share/nginx/html/index.html
+    conf_file_path: /etc/nginx/conf.d/default.conf
+
+  tasks:
+
+    - name: Install nginx package
+      ansible.builtin.dnf:
+        name: "{{ web_pkg }}"
+        state: present
+
+    - name: Start and enable nginx service
+      ansible.builtin.systemd_service:
+        name: "{{ web_service }}"
+        state: started
+        enabled: yes
+
+    - name: Add configuration file for nginx
+      ansible.builtin.blockinfile:
+        path: "{{ conf_file_path }}"
+        block: |
+          server {
+              listen 80;
+
+              location / {
+                  root /usr/share/nginx/html;
+                  index index.html;
+              }
+          }
+      notify: restart nginx service
+
+    - name: Deploy index.html file with content
+      ansible.builtin.copy:
+        dest: "{{ web_file_path }}"
+        content: |
+          <html>
+            <head>
+              <title>Welcome to Ansible Practice</title>
+            </head>
+            <body>
+              <h1>nginx is successfully installed and running on {{ inventory_hostname }}</h1>
+            </body>
+          </html>
+        owner: nginx
+        group: nginx
+        mode: '0644'
+
+  handlers:
+    - name: restart nginx service
+      ansible.builtin.systemd_service:
+        name: "{{ web_service }}"
+        state: restarted

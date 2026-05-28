@@ -1,71 +1,67 @@
+# deploy 2 tier application with application server and database server using ansible playbook
 ---
+# application server configuration
 - name: Deployment of Web server 
-  hosts: webserver
+  hosts: application_server
   become: yes
-
-  vars:
-    web_pkg: nginx
-    php_pkgs: 
-      - php
-      - php-fpm
-      - php-mysqlnd
-    db_pkg: mariadb105-server
-    web_service: nginx
-    db_service: mariadb 
-    php_service: php-fpm
-    web_index_file: /usr/share/nginx/html/index.html
+# variable for all packages and services to be installed and started on application server
+  vars: 
+   packages:
+    - nginx
+    - php
+    - php-fpm
+   services:
+    - nginx
+    - php-fpm
+   web_file_path: /usr/share/nginx/html/info.php
+# install nginx, php and php-fpm packages and start the services on application server
   tasks:
-    - name: Install Web Server
+    - name: Install nginx and php, php-fpm packages
       ansible.builtin.yum:
-        name: "{{ web_pkg }}"
+        name: "{{ packages }}"
         state: present
-    
-    - name: Install PHP packages
-      ansible.builtin.yum:
-        name: "{{ php_pkgs }}"
-        state: present  
-    
-    - name: Start and enable Web server
-      ansible.builtin.systemd:
-        name: "{{ web_service }}"
+    - name: Start and enable nginx and php-fpm services
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
         state: started
         enabled: yes
-
-    - name: Start and enable PHP-FPM
-      ansible.builtin.systemd:
-        name: "{{ php_service }}"
-        state: started
-        enabled: yes
-    
-    - name: Deploy html page on web server
+      loop: "{{ services }}"
+# deploy php info file for testing on application server
+    - name: Deploy php info file for testing
       ansible.builtin.copy:
-        dest:   "{{ web_index_file }}"
-        content: "<h1> Welcome to 2 tier application setup using Ansible running on {{inventory_hostname}} </h1>"
+        dest: "{{ web_file_path }}"
+        content: |
+         <?php 
+         phpinfo(); 
+         ?>
         owner: nginx
-        group: nginx
+        group: nginx    
         mode: '0644'
-
-# DB Server Playbook
+  
+# database server configuration
 - name: Deployment of Database server
-  hosts: dbserver
+  hosts: database_server
   become: yes
-
+# variable for database package and service to be installed and started on database server
   vars:
-    db_pkg: mariadb105-server
-    db_service: mariadb 
+   db_package: mariadb105-server
+   db_service: mariadb
+   db_name: application_db
 
-  tasks:
-    - name: Install DB server
-      ansible.builtin.yum:
-        name: "{{ db_pkg }}"
-        state: present
-
-    - name: Start and enable DB server
-      ansible.builtin.systemd:
-        name: "{{ db_service }}"
-        state: started
-        enabled: yes
-        
-    - name: Create a sample database
-      ansible.builtin.shell:
-        cmd: mysql -u root -e "CREATE DATABASE ansible_db;"
+# install mariadb package and start the service on database server
+  tasks: 
+  - name: Install mariadb server package
+    ansible.builtin.yum:
+      name: "{{ db_package }}"
+      state: present
+  - name: Start and enable mariadb service
+    ansible.builtin.systemd_service:
+      name: "{{ db_service }}"
+      state: started
+      enabled: yes
+  # create a database for application on database server
+  - name: Create a database for application
+    ansible.builtin.shell: |
+      cmd: "mysql -u root -e 'CREATE DATABASE IF NOT EXISTS {{ db_name }};'"
+    args: 
+      executable: /bin/bash

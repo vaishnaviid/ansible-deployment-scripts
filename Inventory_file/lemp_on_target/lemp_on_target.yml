@@ -1,0 +1,34 @@
+# lemp stack installation playbook for target machine
+---
+- name: install lemp stack on target machine
+  hosts: webserver
+  become: yes
+  tasks:
+    - name: install nginx, mariadb and php packages
+      ansible.builtin.yum:
+        name:
+          - nginx
+          - mariadb105-server
+          - php
+          - php-fpm
+          - php-mysql
+        state: present
+    - name: start and enable nginx, mariadb and php-fpm services
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - nginx
+        - mariadb
+        - php-fpm
+    - name: deploy php info file for testing
+      ansible.builtin.copy:
+        dest: /usr/share/nginx/html/info.php
+        content: |
+         <?php 
+         phpinfo(); 
+         ?>
+        owner: nginx
+        group: nginx    
+        mode: '0644'

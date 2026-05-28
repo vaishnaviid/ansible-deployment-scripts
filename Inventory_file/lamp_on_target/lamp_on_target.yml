@@ -1,0 +1,39 @@
+# install lamp stack and deploy html file with content on target machine using ansible playbook
+---
+- name: install lamp stack
+  hosts: webserver
+  become: yes
+  tasks:
+    - name: install httpd, mariadb and php packages
+      ansible.builtin.yum:
+        name:
+          - httpd
+          - mariadb105-server
+          - php
+          - php-fpm
+          - php-mysql
+        state: present
+    - name: start and enable httpd and mariadb services
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - httpd
+        - mariadb
+        - php-fpm
+    - name: deploy index.html file with content
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: |
+         <html>
+          <head>
+           <title> Welcome to Ansible Practice </title>
+          </head>
+          <body>
+           <h1>LAMP stack is successfully installed and running on target machine!</h1>
+          </body>
+         </html>
+        owner: apache
+        group: apache    
+        mode: '0644'

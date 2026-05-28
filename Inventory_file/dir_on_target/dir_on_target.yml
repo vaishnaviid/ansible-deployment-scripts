@@ -1,3 +1,5 @@
+# This playbook creates a directory on the target machine (webserver) with specific permissions.
+# yml file and inventory file should be in the same directory for the playbook to work.
 ---
 - name: create a directory on target machine
   hosts: webserver

@@ -1,0 +1,6 @@
+---
+- name: Install and setup Apache webserver
+  hosts: localhost
+  become: yes
+  roles:
+    - httpd

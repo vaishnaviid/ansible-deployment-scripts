@@ -1,0 +1,4 @@
+
+apache_pkg: httpd
+apache_service: httpd
+apache_index_file: /var/www/html/index.html

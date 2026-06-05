@@ -1,5 +1,5 @@
 # 🚀 Ansible Practice Repository
-                                
+                                  
 This repository contains my hands-on learning journey with **Ansible**, covering everything from basic setup to writing real-world automation playbooks.  
 It includes **inventory files, playbooks, modules, examples, and EC2 setup steps** to help build solid DevOps automation skills.
                                                           
